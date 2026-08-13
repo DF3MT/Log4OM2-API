@@ -43,7 +43,7 @@ log4om:
   encryption:
     key: ${ENCRYPTION_KEY:0123456789abcdef0123456789abcdef}
   cors:
-    allowed-origins: ${CORS_ORIGIN:http://localhost:3000}
+    allowed-origins: ${CORS_ORIGIN:http://localhost:*,http://127.0.0.1:*,http://192.168.*.*:*,http://10.*.*.*:*}
   tenant:
     pool-max-size: 5
     pool-idle-timeout-ms: 600000

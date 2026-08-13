@@ -20,7 +20,9 @@ data class Log4omProperties(
     )
 
     data class Cors(
-        val allowedOrigins: String = "http://localhost:3000"
+        /** Comma-separated origin patterns (Spring allowedOriginPatterns). */
+        val allowedOrigins: String =
+            "http://localhost:*,http://127.0.0.1:*,http://192.168.*.*:*,http://10.*.*.*:*,http://172.16.*.*:*,http://172.17.*.*:*,http://172.18.*.*:*,http://172.19.*.*:*,http://172.2*.*.*:*,http://172.30.*.*:*,http://172.31.*.*:*"
     )
 
     data class Tenant(
