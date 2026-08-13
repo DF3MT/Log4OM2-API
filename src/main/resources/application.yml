@@ -43,7 +43,8 @@ log4om:
   encryption:
     key: ${ENCRYPTION_KEY:0123456789abcdef0123456789abcdef}
   cors:
-    allowed-origins: ${CORS_ORIGIN:http://localhost:*,http://127.0.0.1:*,http://192.168.*.*:*,http://10.*.*.*:*}
+    # "*" allows any browser Origin (LAN IPs included). Override in production if desired.
+    allowed-origins: ${CORS_ORIGIN:*}
   tenant:
     pool-max-size: 5
     pool-idle-timeout-ms: 600000

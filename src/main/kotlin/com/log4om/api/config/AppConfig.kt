@@ -3,29 +3,36 @@ package com.log4om.api.config
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.servlet.config.annotation.CorsRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 @Configuration
 @EnableConfigurationProperties(Log4omProperties::class)
 class AppConfig(
     private val props: Log4omProperties
 ) {
+    /**
+     * Explicit CorsConfigurationSource so Spring Security and MVC share the same rules.
+     * JWT is sent via Authorization header (no cookies) → credentials disabled → "*" is allowed.
+     */
     @Bean
-    fun corsConfigurer(): WebMvcConfigurer = object : WebMvcConfigurer {
-        override fun addCorsMappings(registry: CorsRegistry) {
-            val patterns = props.cors.allowedOrigins.split(",")
-                .map { it.trim() }
-                .filter { it.isNotEmpty() }
-                .toTypedArray()
-            registry.addMapping("/**")
-                // Patterns (not exact origins) so LAN IPs like http://192.168.x.x:3000 work in dev.
-                // JWT is sent via Authorization header — cookies/credentials not required.
-                .allowedOriginPatterns(*patterns)
-                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(false)
-                .maxAge(3600)
+    fun corsConfigurationSource(): CorsConfigurationSource {
+        val patterns = props.cors.allowedOrigins.split(",")
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+            .ifEmpty { listOf("*") }
+
+        val config = CorsConfiguration().apply {
+            allowedOriginPatterns = patterns
+            allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD")
+            allowedHeaders = listOf("*")
+            exposedHeaders = listOf("Content-Disposition")
+            allowCredentials = false
+            maxAge = 3600
+        }
+        return UrlBasedCorsConfigurationSource().also {
+            it.registerCorsConfiguration("/**", config)
         }
     }
 }
