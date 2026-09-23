@@ -1,20 +1,15 @@
 # `/srv/log4om-api.df3mt.de`
 
-Production stack for **http://log4om-api.df3mt.de** (HTTP).
+API + Postgres. Host port **8080**. Images from GHCR (GitHub Actions); no local build.
 
-Images are built by GitHub Actions and published to GHCR. This directory only **pulls** — never builds on the host.
+Creates Docker network `log4om` for the web stack (`/srv/log4om-web.df3mt.de`).
 
 ```bash
 cd /srv/log4om-api.df3mt.de
-cp .env.example .env   # first time — or run ./install.sh
-./install.sh           # pull + up --no-build
+./install.sh
 ```
 
-| Service  | Image |
-|----------|--------|
-| api      | `ghcr.io/df3mt/log4om-api:latest` |
-| web      | `ghcr.io/df3mt/log4om-web:latest` |
-| postgres | `postgres:16-alpine` |
-| nginx    | `nginx:1.27-alpine` → host `:80` |
-
-CI: push to `main` on `Log4OM2-API` / `Log4OM2-Web` (or `workflow_dispatch`).
+| Service  | Image / port |
+|----------|----------------|
+| api      | `ghcr.io/df3mt/log4om-api:latest` → `:8080` |
+| postgres | `postgres:16-alpine` (internal) |

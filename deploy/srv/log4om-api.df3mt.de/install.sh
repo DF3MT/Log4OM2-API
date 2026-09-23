@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Install / update Log4OM stack under /srv/log4om-api.df3mt.de
-# Images are built by GitHub Actions — host only pulls.
+# Install / update API stack under /srv/log4om-api.df3mt.de
 set -euo pipefail
 
 DEST="${DEST:-/srv/log4om-api.df3mt.de}"
