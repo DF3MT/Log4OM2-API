@@ -29,8 +29,9 @@ else
 fi
 
 cd "$DEST"
+# Images come from GHCR (GitHub Actions). Never build on the host.
 docker compose pull
-docker compose up -d
+docker compose up -d --no-build
 
 echo
 echo "Stack is up. Point DNS log4om.df3.mt.de → this host and open:"

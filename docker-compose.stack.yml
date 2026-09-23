@@ -1,11 +1,13 @@
-# Full stack example for LAN/host deploy (GHCR images).
-# Usage:
+# Full stack using GHCR images only (no local build).
+# Build happens in GitHub Actions on push to main.
+#
 #   docker compose -f docker-compose.stack.yml pull
 #   docker compose -f docker-compose.stack.yml up -d
 
 services:
   postgres:
     image: postgres:16-alpine
+    pull_policy: always
     environment:
       POSTGRES_DB: log4om_platform
       POSTGRES_USER: log4om
@@ -21,6 +23,7 @@ services:
 
   api:
     image: ghcr.io/df3mt/log4om-api:latest
+    pull_policy: always
     ports:
       - "8080:8080"
     environment:
@@ -37,10 +40,10 @@ services:
 
   web:
     image: ghcr.io/df3mt/log4om-web:latest
+    pull_policy: always
     ports:
       - "3000:3000"
     environment:
-      # Critical: API hostname inside the Docker network (service name), NOT 127.0.0.1
       API_URL: http://api:8080
     depends_on:
       - api

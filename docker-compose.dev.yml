@@ -1,8 +1,13 @@
-name: on push
+# Local/dev stack — pulls GHCR images (built by GitHub Actions). No local build.
+# For source build during development, use: ./gradlew bootJar && docker build ...
+#
+#   docker compose -f docker-compose.dev.yml pull
+#   docker compose -f docker-compose.dev.yml up -d
 
 services:
   postgres:
     image: postgres:16-alpine
+    pull_policy: always
     environment:
       POSTGRES_DB: log4om_platform
       POSTGRES_USER: log4om
@@ -18,7 +23,8 @@ services:
       retries: 10
 
   api:
-    build: .
+    image: ghcr.io/df3mt/log4om-api:latest
+    pull_policy: always
     ports:
       - "8080:8080"
     environment:
